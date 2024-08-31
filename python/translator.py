@@ -15,6 +15,19 @@ braille_numbers = {
     '1': 'O.....', '2': 'O.O...', '3': 'OO....', '4': 'OO.O..', '5': 'O..O..',
     '6': 'OOO...', '7': 'OOOO..', '8': 'O.OO..', '9': '.OO...', '0': '.OOO..',
 }
+def is_string_braille(string):
+    # Check if the length of the string is a multiple of 6
+    if len(string) % 6 != 0:
+        return False
+    
+    # Check each character in the string
+    for char in string:
+        # If the character is not 'O' or '.', return False
+        if char != 'O' and char != '.':
+            return False
+    
+    # If all characters are valid, return True
+    return True
 
 def english_to_braille(string):
     result = ''
@@ -38,9 +51,63 @@ def english_to_braille(string):
 
     return result
 
+def braille_to_english(string):
+    # Create a dictionary that maps Braille characters to their corresponding English letters
+    english_chars = {}
+    for key, value in braille_chars.items():
+        english_chars[value] = key
+    
+    # Create a dictionary that maps unique Braille patterns (like capital and number) to their meanings
+    english_unique = {}
+    for key, value in braille_unique.items():
+        english_unique[value] = key
+    
+    # Create a dictionary that maps Braille number patterns to their corresponding digits
+    english_numbers = {}
+    for key, value in braille_numbers.items():
+        english_numbers[value] = key
+
+    result = ''
+    is_upper = False
+    is_number = False
+
+    # Loop through the string, processing 6 characters at a time
+    for i in range(0, len(string), 6):
+        braille_char = string[i: i + 6]
+
+        if braille_char in english_unique:
+            if english_unique[braille_char] == 'capital':
+                is_upper = True
+            elif english_unique[braille_char] == 'number':
+                is_number = True
+            continue
+
+        if is_number:
+            if braille_char in english_numbers:
+                result += english_numbers[braille_char]
+            else:
+                result += ' '
+            is_number = False
+        elif braille_char in english_chars:
+            letter = english_chars[braille_char]
+            if is_upper:
+                result += letter.upper()
+                is_upper = False
+            else:
+                result += letter
+        else:
+            result += ' '  # Fallback for unmapped characters
+
+    return result
+
 def main():
     message = ' '.join(sys.argv[1:])
-    print(english_to_braille(message))
+    is_braille_string = is_string_braille(message)
+
+    if is_braille_string:
+        print(braille_to_english(message))
+    else:
+        print(english_to_braille(message))
 
 if __name__ == "__main__":
     main()
