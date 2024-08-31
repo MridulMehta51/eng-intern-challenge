@@ -15,19 +15,6 @@ braille_numbers = {
     '1': 'O.....', '2': 'O.O...', '3': 'OO....', '4': 'OO.O..', '5': 'O..O..',
     '6': 'OOO...', '7': 'OOOO..', '8': 'O.OO..', '9': '.OO...', '0': '.OOO..',
 }
-def is_string_braille(string):
-    # Check if the length of the string is a multiple of 6
-    if len(string) % 6 != 0:
-        return False
-    
-    # Check each character in the string
-    for char in string:
-        # If the character is not 'O' or '.', return False
-        if char != 'O' and char != '.':
-            return False
-    
-    # If all characters are valid, return True
-    return True
 
 def english_to_braille(string):
     result = ''
@@ -99,6 +86,21 @@ def braille_to_english(string):
             result += ' '  # Fallback for unmapped characters
 
     return result
+
+
+def is_string_braille(string):
+    # Check if the length of the string is a multiple of 6
+    if len(string) % 6 != 0:
+        return False
+    
+    # Check each character in the string
+    for char in string:
+        # If the character is not 'O' or '.', return False
+        if char != 'O' and char != '.':
+            return False
+    
+    # If all characters are valid, return True
+    return True
 
 def main():
     message = ' '.join(sys.argv[1:])
